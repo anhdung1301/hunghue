@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,19 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+/* Api Register */
+Route::get('token', function (Request $request) {
+    $token = $request->session()->token();
+    $token = csrf_token();
+    return Response()->json(array("token"=>$token));
+});
+
+Route::post('/users/login', [UsersController::class, 'onLogin'])->name('user.login');
+Route::post('/users', [UsersController::class, 'onRegister'])->name('user.register');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

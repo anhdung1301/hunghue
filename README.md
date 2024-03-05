@@ -23,6 +23,13 @@ php artisan migrate
 ## crate controller 
 php artisan make:controller Api/UsersController --resource
 
+## 
+npm install react-router-dom
+
+
+## done 
+
+npx react-scripts build
 
 
 
