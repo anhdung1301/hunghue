@@ -15,19 +15,10 @@ use App\Http\Controllers\Api\UsersController;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-/* Api Register */
-Route::get('token', function (Request $request) {
-    $token = $request->session()->token();
-    $token = csrf_token();
-    return Response()->json(array("token"=>$token));
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
 });
 
 Route::post('/users/login', [UsersController::class, 'onLogin'])->name('user.login');
 Route::post('/users', [UsersController::class, 'onRegister'])->name('user.register');
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/users/logout', [UsersController::class, 'logout'])->name('user.logout')->middleware('auth:sanctum');

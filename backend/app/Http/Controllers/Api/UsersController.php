@@ -9,9 +9,21 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -24,19 +36,27 @@ class UsersController extends Controller
 
     public function onLogin(Request $request)
     {
-        $validator = Validator::make($request->all(),[
-            'email' => 'required|string|email',
-            'password' => 'required|string',
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()],  401);
+            return response()->json(['error' => $validator->errors()],  422);
         }
+        if (Auth::attempt($credentials)) {
+            // Authentication successful
+            $token = $request->user()->createToken('authToken')->plainTextToken;
 
-        $user = User::where("email", $request->email)->get();
-        if ($user->count() > 0) {
-            return  response()->json(['success'  => 1, "data" => $user[0]]);
+            return response()->json(['token' => $token], 200);
+        } else {
+            // Authentication failed
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
-        return response()->json(['error' => " Login không thành công!"], 401);
     }
 
     public function onRegister(Request $request)
@@ -70,4 +90,12 @@ class UsersController extends Controller
         $user = User::create($postArray);
         return response()->json(array("success"=> 1,"data"=>$postArray ));
     }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
+
 }
