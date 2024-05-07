@@ -34,6 +34,12 @@ class UsersController extends Controller
         return new UsersResource(User::all());
     }
 
+    /**
+     * onLogin
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function onLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -59,6 +65,12 @@ class UsersController extends Controller
         }
     }
 
+    /**
+     *  Register
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function onRegister(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -91,6 +103,13 @@ class UsersController extends Controller
         return response()->json(array("success"=> 1,"data"=>$postArray ));
     }
 
+    /**
+     * logout
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();

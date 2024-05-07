@@ -19,11 +19,6 @@ function Guest() {
                         <Link to="/register">Register</Link>
                     </div>
                 </div>
-                {/*<Routes>*/}
-                {/*    <Route path="/" element={<Home/>}/>*/}
-                {/*    <Route path="login" element={<Login/>}/>*/}
-                {/*    <Route path="Register" element={<Register/>}/>*/}
-                {/*</Routes>*/}
             </div>
         </>
     );
